@@ -3,6 +3,7 @@ import { storeToRefs } from "pinia";
 import { onMounted } from "vue";
 import { RouterView } from "vue-router";
 import { ThemeOptions, useThemeStore } from "./stores/theme";
+import NavBar from "./components/NavBar/NavBar.vue";
 
 const themeStore = useThemeStore();
 const { theme } = storeToRefs(themeStore);
@@ -17,6 +18,7 @@ onMounted(() => {
 </script>
 
 <template>
+  <NavBar />
   <RouterView />
 </template>
 
