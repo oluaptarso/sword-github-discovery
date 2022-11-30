@@ -125,11 +125,10 @@ const logout = () => {
 
     <DisclosurePanel class="sm:hidden">
       <div class="space-y-1 px-2 pt-2 pb-3">
-        <DisclosureButton
+        <RouterLink
           v-for="item in navigation"
           :key="item.name"
-          as="a"
-          :href="item.href"
+          :to="item.href"
           :class="[
             item.current ? 'bg-slate-300 text-slate-700 dark:bg-slate-900 dark:text-slate-100' : 'text-slate-300 hover:bg-slate-700 hover:text-slate-100',
             'block px-3 py-2 rounded-md text-base font-medium',
@@ -137,7 +136,7 @@ const logout = () => {
           :aria-current="item.current ? 'page' : undefined"
         >
           {{ item.name }}
-        </DisclosureButton>
+        </RouterLink>
       </div>
     </DisclosurePanel>
   </Disclosure>
