@@ -8,11 +8,14 @@ export enum ThemeOptions {
 
 export const useThemeStore = defineStore("Theme", {
   state: () => ({
-    theme: useLocalStorage("theme", ThemeOptions.Light),
+    theme: useLocalStorage("theme", ThemeOptions.Dark),
   }),
   actions: {
     toggle() {
       this.theme = (this.theme as ThemeOptions) == ThemeOptions.Dark ? ThemeOptions.Light : ThemeOptions.Dark;
+    },
+    setDark() {
+      this.theme = ThemeOptions.Dark;
     },
   },
 });
