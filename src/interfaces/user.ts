@@ -1,5 +1,5 @@
 export interface IAuthenticatedUser {
-  id: string;
+  id?: string;
   displayName: string;
   email: string;
   token: string;
