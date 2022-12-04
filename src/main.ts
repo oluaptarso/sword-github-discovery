@@ -1,12 +1,15 @@
 import { createApp, markRaw } from "vue";
 import { createPinia } from "pinia";
-import vue3Spinner from "vue3-spinner";
 import VueLazyLoad from "vue3-lazyload";
+import FirebaseService from "@/services/firebase";
 
 import App from "./App.vue";
 import router from "./router";
 
 import "./assets/main.scss";
+import { firebaseServiceInjectionKey } from "./providers/injection-keys";
+import { authenticationServiceInjectionKey } from "./providers/injection-keys";
+import AuthenticationService from "./services/authentication";
 
 const app = createApp(App);
 const pinia = createPinia();
@@ -16,9 +19,10 @@ pinia.use(({ store }) => {
   store.router = markRaw(router);
 });
 
-app.use(vue3Spinner);
+app.provide(firebaseServiceInjectionKey, FirebaseService);
+app.provide(authenticationServiceInjectionKey, new AuthenticationService());
+
 app.use(VueLazyLoad);
 app.use(pinia);
 app.use(router);
-
 app.mount("#app");
