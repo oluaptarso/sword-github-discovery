@@ -1,0 +1,19 @@
+button[link] {
+  @apply text-violet-400 transition duration-200 ease-in-out hover:text-violet-300 hover:underline active:text-violet-800;
+}
+
+button[primary] {
+  @apply inline-block w-full rounded bg-violet-600 px-7 py-3 text-sm font-medium uppercase text-white shadow-md transition duration-150 ease-in-out hover:bg-violet-700 hover:shadow-lg focus:bg-violet-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-violet-800 active:shadow-lg;
+  &[disabled] {
+    cursor: unset;
+    @apply bg-violet-400
+  }
+}
+
+button[secondary] {
+  @apply text-pink-600 border-pink-600 border-2 inline-block w-full rounded bg-transparent px-7 py-3 text-sm font-medium uppercase shadow-md transition duration-150 ease-in-out hover:shadow-lg focus:shadow-lg focus:outline-none focus:ring-0 active:border-pink-700 active:text-pink-700 active:shadow-lg;
+  &[disabled] {
+    cursor: unset;
+    @apply border-pink-400 text-pink-400
+  }
+}

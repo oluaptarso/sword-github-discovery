@@ -1,0 +1,33 @@
+.slide-leave-active,
+.slide-enter-active {
+  transition: all 1s;
+}
+.slide-enter-from {
+  transform: translateX(+100%);
+  opacity: 0;
+}
+.slide-enter-to {
+  transform: translateX(0);
+  opacity: 1;
+}
+.slide-leave-to {
+  transform: translateX(-100%);
+  opacity: 0;
+}
+
+.slideback-leave-active,
+.slideback-enter-active {
+  transition: all 1s;
+}
+.slideback-enter-from {
+  transform: translateX(-100%);
+  opacity: 0;
+}
+.slideback-enter-to {
+  transform: translateX(0);
+  opacity: 1;
+}
+.slideback-leave-to {
+  transform: translateX(100%);
+  opacity: 0;
+}

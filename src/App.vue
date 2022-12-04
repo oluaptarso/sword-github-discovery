@@ -1,91 +1,62 @@
 <script setup lang="ts">
-import { RouterLink, RouterView } from "vue-router";
-import HelloWorld from "./components/HelloWorld.vue";
+import { storeToRefs } from "pinia";
+import { inject, onMounted, onUnmounted } from "vue";
+import { RouterView, useRouter } from "vue-router";
+import { ThemeOptions, useThemeStore } from "./stores/theme";
+import NavBar from "./components/NavBar/NavBar.vue";
+import type { Unsubscribe } from "@firebase/util";
+import { useAuthenticationStore } from "./stores/authentication";
+import { firebaseServiceInjectionKey } from "./providers/injection-keys";
+
+const firebaseService = inject(firebaseServiceInjectionKey);
+
+if (!firebaseService) {
+  throw Error("FirebaseService was not injected");
+}
+
+const themeStore = useThemeStore();
+const { theme } = storeToRefs(themeStore);
+const body = document.getElementsByTagName("body")[0];
+
+const unsubscribeThemeStore = themeStore.$subscribe((_, theme) => {
+  if (theme.theme === ThemeOptions.Dark) body.classList.add("dark");
+  else body.classList.remove("dark");
+});
+const router = useRouter();
+
+let unsubscribeFirebase: Unsubscribe;
+
+onMounted(() => {
+  if (theme.value == ThemeOptions.Dark) body.classList.add("dark");
+  unsubscribeFirebase = firebaseService.getAuthService().onAuthStateChanged(async (user) => {
+    if (user) {
+      const store = useAuthenticationStore();
+      store.user = {
+        displayName: store.user.displayName,
+        email: user.email || "",
+        id: user.uid,
+        token: await user.getIdToken(true),
+        emailVerified: user.emailVerified,
+      };
+
+      if (user.displayName) store.user.displayName = user.displayName;
+
+      router.push(store.redirectTo || "discovery");
+    } else {
+      router.push("/authentication");
+    }
+  });
+});
+
+onUnmounted(() => {
+  unsubscribeFirebase();
+  unsubscribeThemeStore();
+});
 </script>
 
 <template>
-  <header>
-    <img
-      alt="Vue logo"
-      class="logo"
-      src="@/assets/logo.svg"
-      width="125"
-      height="125"
-    />
-
-    <div class="wrapper">
-      <HelloWorld msg="You did it!" />
-
-      <nav>
-        <RouterLink to="/">Home</RouterLink>
-        <RouterLink to="/about">About</RouterLink>
-      </nav>
-    </div>
-  </header>
-
+  <NavBar />
   <RouterView />
 </template>
 
-<style scoped>
-header {
-  line-height: 1.5;
-  max-height: 100vh;
-}
-
-.logo {
-  display: block;
-  margin: 0 auto 2rem;
-}
-
-nav {
-  width: 100%;
-  font-size: 12px;
-  text-align: center;
-  margin-top: 2rem;
-}
-
-nav a.router-link-exact-active {
-  color: var(--color-text);
-}
-
-nav a.router-link-exact-active:hover {
-  background-color: transparent;
-}
-
-nav a {
-  display: inline-block;
-  padding: 0 1rem;
-  border-left: 1px solid var(--color-border);
-}
-
-nav a:first-of-type {
-  border: 0;
-}
-
-@media (min-width: 1024px) {
-  header {
-    display: flex;
-    place-items: center;
-    padding-right: calc(var(--section-gap) / 2);
-  }
-
-  .logo {
-    margin: 0 2rem 0 0;
-  }
-
-  header .wrapper {
-    display: flex;
-    place-items: flex-start;
-    flex-wrap: wrap;
-  }
-
-  nav {
-    text-align: left;
-    margin-left: -1rem;
-    font-size: 1rem;
-
-    padding: 1rem 0;
-    margin-top: 1rem;
-  }
-}
-</style>
+<style scoped lang="scss"></style>
