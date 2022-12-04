@@ -1,6 +1,8 @@
 import * as firebase from "firebase/app";
 import { getAuth } from "firebase/auth";
 import type { Auth } from "firebase/auth";
+import type IFirebaseService from "@/interfaces/firebase-service";
+import type { StringMapType } from "@/types/map";
 
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_APP_FIREBASE_API_KEY,
@@ -14,17 +16,13 @@ const firebaseConfig = {
 
 let FirebaseApp: firebase.FirebaseApp;
 
-type MapType = {
-  [key: string]: string;
+const firebaseErrorsCodeTextMap: StringMapType = {
+  "auth/email-already-in-use": "Email already in use",
+  "auth/user-not-found": "Incorrect email or password",
+  "auth/wrong-password": "Incorrect email or password",
 };
 
-const firebaseErrorsCodeTextMap: MapType = {
-  "auth/email-already-in-use": "Email already in use.",
-  "auth/user-not-found": "Incorrect email or password.",
-  "auth/wrong-password": "Incorrect email or password.",
-};
-
-const FirebaseService = {
+const FirebaseService: IFirebaseService = {
   getAuthService: function (): Auth {
     return getAuth(this.getAppService());
   },
