@@ -1,10 +1,9 @@
 import { createRouter, createWebHistory } from "vue-router";
-import AuthenticationPage from "@/views/AuthenticationPage.vue";
-
-import DiscoveryPage from "../views/DiscoveryPage.vue";
 import { useAuthenticationStore } from "@/stores/authentication";
 import SplashPage from "@/views/SplashPage.vue";
-import { useDesiredRouteStore } from "@/stores/desired-route";
+import AuthenticationPage from "@/views/AuthenticationPage.vue";
+import DiscoveryPage from "../views/DiscoveryPage.vue";
+import MyAccountPage from "../views/MyAccountPage.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -22,7 +21,7 @@ const router = createRouter({
     {
       path: "/my-account",
       name: "my-account",
-      component: DiscoveryPage,
+      component: MyAccountPage,
     },
     {
       path: "/authentication",
@@ -35,8 +34,7 @@ const router = createRouter({
 const allowedRoutes = ["authentication", "splash"];
 
 router.beforeEach((to, from, next) => {
-  const { isAuthenticated } = useAuthenticationStore();
-  const desiredRouteStore = useDesiredRouteStore();
+  const { isAuthenticated, $patch } = useAuthenticationStore();
   const nextToSplash = () => next({ name: "splash" });
 
   // if is a valid route.
@@ -49,8 +47,7 @@ router.beforeEach((to, from, next) => {
       next();
       return;
     } else if (!isAuthenticationRoute) {
-      //save on storage the desired route to redirect.
-      desiredRouteStore.desiredRoute = to.name.toString();
+      $patch({ redirectTo: to.name.toString() });
     }
 
     if (isAuthenticationRoute) {
